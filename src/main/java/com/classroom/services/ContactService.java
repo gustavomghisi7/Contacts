@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.classroom.entity.Contact;
 import com.classroom.repository.ContactRepository;
+import com.classroom.services.dto.ContactDTO;
 import com.classroom.services.exception.Validation;
 
 @Service
@@ -18,7 +19,7 @@ public class ContactService {
 	@Autowired
 	ContactRepository repo;
 	
-	public Contact saved(Contact contact) {
+	public ContactDTO saved(Contact contact) {
 		if(contact.getTelephone().length() != 14) {
 			throw new Validation("Telephone Invalid");
 		}
@@ -26,7 +27,11 @@ public class ContactService {
 		if(!contact.getEmail().contains("@")) {
 			throw new Validation("Email Invalid");
 		}
-		return repo.save(contact);
+		
+		Contact ct = repo.save(contact);
+		ContactDTO contactDTO = new ContactDTO(ct);
+
+		return contactDTO;
 	}
 	
 	public List<Contact> consultContact() {

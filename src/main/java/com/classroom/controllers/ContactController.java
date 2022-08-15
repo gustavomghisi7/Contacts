@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.classroom.entity.Contact;
 import com.classroom.services.ContactService;
+import com.classroom.services.dto.ContactDTO;
 
 @RestController
 @RequestMapping("/")
@@ -41,8 +42,8 @@ public class ContactController {
 	}
 	
 	@PostMapping("/contact")
-	public ResponseEntity<Contact> postContact(@RequestBody Contact contact) {
-		Contact ct = service.saved(contact);
+	public ResponseEntity<ContactDTO> postContact(@RequestBody Contact contact) {
+		ContactDTO ct = service.saved(contact);
 		return ResponseEntity.status(HttpStatus.CREATED).body(ct);
 	}
 	
