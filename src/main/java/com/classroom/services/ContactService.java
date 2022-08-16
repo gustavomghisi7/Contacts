@@ -1,5 +1,6 @@
 package com.classroom.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,12 +35,25 @@ public class ContactService {
 		return contactDTO;
 	}
 	
-	public List<Contact> consultContact() {
+	public List<ContactDTO> consultContact() {
 		List<Contact> contact = repo.findAll();
-		return contact;
+		List<ContactDTO> contactsDTO = new ArrayList<ContactDTO>();
+		
+		for(Contact ct: contact) {
+			contactsDTO.add(new ContactDTO(ct));
+		}
+		
+		return contactsDTO;
 	}
 	
-	public Contact consultContactById(Long idcontact) {
+	public ContactDTO consultContactById(Long idcontact) {
+		Optional<Contact> opcontact = repo.findById(idcontact);
+		Contact ct = opcontact.orElseThrow(
+				() -> new EntityNotFoundException("Contact not found"));
+		return new ContactDTO(ct);
+	}
+	
+	private Contact consultContacts(Long idcontact) {
 		Optional<Contact> opcontact = repo.findById(idcontact);
 		Contact ct = opcontact.orElseThrow(
 				() -> new EntityNotFoundException("Contact not found"));
@@ -47,18 +61,18 @@ public class ContactService {
 	}
 	
 	public void excludeContact(Long idcontact) {
-		Contact ct = consultContactById(idcontact);
+		Contact ct = consultContacts(idcontact);
 		repo.delete(ct);
 	}
 	
-	public Contact chageContact(Long idcontact, Contact contact) {
-		Contact ct = consultContactById(idcontact);
+	public ContactDTO chageContact(Long idcontact, Contact contact) {
+		Contact ct = consultContacts(idcontact);
 		BeanUtils.copyProperties(contact, ct, "id");
 		/*
 		ct.setEmail(contact.getEmail());
 		ct.setName(contact.getName());
 		ct.setTelephone(contact.getTelephone());
 		*/
-		return repo.save(ct);
+		return new ContactDTO (repo.save(ct));
 	}
 }

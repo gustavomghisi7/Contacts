@@ -31,13 +31,13 @@ public class ContactController {
 	}
 	
 	@GetMapping("/contact")
-	public ResponseEntity<List<Contact>> getContact() {
-		List<Contact> contacts = service.consultContact();
+	public ResponseEntity<List<ContactDTO>> getContact() {
+		List<ContactDTO> contacts = service.consultContact();
 		return ResponseEntity.status(HttpStatus.OK).body(contacts);
 	}
 	
 	@GetMapping("/contact/{idcontact}")
-	public ResponseEntity<Contact> getContactById(@PathVariable("idcontact") Long idcontact) {
+	public ResponseEntity<ContactDTO> getContactById(@PathVariable("idcontact") Long idcontact) {
 		return ResponseEntity.ok(service.consultContactById(idcontact));
 	}
 	
@@ -54,7 +54,7 @@ public class ContactController {
 	}
 	
 	@PutMapping("/contact/{idcontact}")
-	public ResponseEntity<Contact> updateContact(@PathVariable("idcontact")
+	public ResponseEntity<ContactDTO> updateContact(@PathVariable("idcontact")
 		Long idcontact, @RequestBody Contact contact) {
 		return ResponseEntity.ok(service.chageContact(idcontact, contact));
 	}
