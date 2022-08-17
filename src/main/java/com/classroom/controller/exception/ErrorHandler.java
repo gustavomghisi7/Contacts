@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -65,8 +66,18 @@ public class ErrorHandler {
 		
 		StandardError error = new StandardError();
 		error.setTimestamp(Instant.now());
-		error.setStatus(HttpStatus.BAD_REQUEST.value());
-		error.setError("Incorrect data");
+		error.setMessage(e.getMessage());
+		error.setPath(req.getRequestURI());
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+	}
+	
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<StandardError> myException(
+			MethodArgumentNotValidException e, HttpServletRequest req){
+		
+		StandardError error = new StandardError();
+		error.setTimestamp(Instant.now());
 		error.setMessage(e.getMessage());
 		error.setPath(req.getRequestURI());
 		

@@ -1,5 +1,8 @@
 package com.classroom.services.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.classroom.entity.Contact;
 
 public class ContactDTO {
@@ -26,6 +29,15 @@ public class ContactDTO {
 		this.name = contact.getName();
 		this.telephone = contact.getTelephone();
 		this.email = contact.getEmail();
+	}
+	
+	public static List<ContactDTO> convertToDTO(List<Contact> contacts){
+		List<ContactDTO> contactsDTO = new ArrayList<>();
+		for (Contact ct : contacts) {
+			contactsDTO.add(new ContactDTO(ct));
+		}
+		
+		return contactsDTO;
 	}
 	
 

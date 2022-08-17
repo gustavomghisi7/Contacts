@@ -2,6 +2,8 @@ package com.classroom.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,11 @@ public class ContactController {
 		return "Welcome to home page";
 	}
 	
+	@GetMapping("/contact/email/{email}")
+	public ResponseEntity<List<ContactDTO>> getContactByEmail(@PathVariable("email") String email){
+		return ResponseEntity.ok(service.consultContactByEmail(email));
+	}
+	
 	@GetMapping("/contact")
 	public ResponseEntity<List<ContactDTO>> getContact() {
 		List<ContactDTO> contacts = service.consultContact();
@@ -42,7 +49,7 @@ public class ContactController {
 	}
 	
 	@PostMapping("/contact")
-	public ResponseEntity<ContactDTO> postContact(@RequestBody Contact contact) {
+	public ResponseEntity<ContactDTO> postContact(@Valid @RequestBody Contact contact) {
 		ContactDTO ct = service.saved(contact);
 		return ResponseEntity.status(HttpStatus.CREATED).body(ct);
 	}

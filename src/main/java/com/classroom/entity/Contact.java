@@ -9,6 +9,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Contact {
@@ -17,12 +20,16 @@ public class Contact {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotBlank(message = "Name is required")
 	@Column(length = 40, nullable = false)
 	private String name;
 	
+	@NotBlank(message = "Email is required")
+	@Email(message = "Email invalid")
 	@Column(length = 50, nullable = false)
 	private String email;
 	
+	@Size(max=14, min=14, message="The phone must have 14 characters")
 	@Column(length = 15)
 	private String telephone;
 	
