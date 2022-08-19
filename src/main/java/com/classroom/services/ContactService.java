@@ -54,7 +54,7 @@ public class ContactService {
 		return new ContactDTO(ct);
 	}
 	
-	private Contact consultContacts(Long idcontact) {
+	public Contact consultContacts(Long idcontact) {
 		Optional<Contact> opcontact = repo.findById(idcontact);
 		Contact ct = opcontact.orElseThrow(
 				() -> new EntityNotFoundException("Contact not found"));
@@ -62,8 +62,8 @@ public class ContactService {
 	}
 	
 	public void excludeContact(Long idcontact) {
-		Contact ct = consultContacts(idcontact);
-		repo.delete(ct);
+		//Contact ct = consultContacts(idcontact);
+		repo.deleteById(idcontact);
 	}
 	
 	public ContactDTO chageContact(Long idcontact, Contact contact) {
