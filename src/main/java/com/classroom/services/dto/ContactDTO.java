@@ -30,7 +30,7 @@ public class ContactDTO {
 		this.telephone = contact.getTelephone();
 		this.email = contact.getEmail();
 	}
-	
+
 	public static List<ContactDTO> convertToDTO(List<Contact> contacts){
 		List<ContactDTO> contactsDTO = new ArrayList<>();
 		for (Contact ct : contacts) {
