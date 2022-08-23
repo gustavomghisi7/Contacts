@@ -1,9 +1,13 @@
 package com.classroom.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -44,6 +48,7 @@ public class PeopleControllerTests {
 	void setup() {
 		existingId = 1L;
 		nonExistentId = 100L;
+		
 		personNew = new People();
 		existingPerson = new People("Maria");
 		existingPerson.setId(1L);
@@ -51,6 +56,8 @@ public class PeopleControllerTests {
 		Mockito.when(service.consultPeopleById(existingId)).thenReturn(existingPerson);
 		Mockito.doThrow(EntityNotFoundException.class).when(service).consultPeopleById(nonExistentId);
 		Mockito.when(service.savePeople(any())).thenReturn(existingPerson);
+		Mockito.when(service.alterPeople(eq(existingId), any())).thenReturn(existingPerson);
+		Mockito.when(service.alterPeople(eq(nonExistentId), any())).thenThrow(EntityNotFoundException.class);
 	}
 	
 	@Test
@@ -76,6 +83,33 @@ public class PeopleControllerTests {
 				.accept(MediaType.APPLICATION_JSON));
 		result.andExpect(status().isCreated());
 				
+	}
+	
+	@Test
+	public void shouldReturnOkWhenChangeSuccessfully() throws Exception {
+		String jsonBody = objectMapper.writeValueAsString(existingPerson);
+		ResultActions result = mockMvc.perform(put("/people/{idpeople}", existingId)
+				.content(jsonBody)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+			result.andExpect(status().isOk());
+	}
+	
+	@Test
+	public void shouldReturn404WhenChangingNonExistentContact() throws Exception {
+		String jsonBody = objectMapper.writeValueAsString(personNew);
+		ResultActions result = mockMvc.perform(put("/people/{idpeople}", nonExistentId)
+				.content(jsonBody)
+				.contentType(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON));
+			result.andExpect(status().isNotFound());
+	}
+	
+	@Test
+	public void returnsListWhenItSuccessfullyQueriesAll() throws Exception {
+		Mockito.when(service.consultAll()).thenReturn(new ArrayList<>());
+		ResultActions result = mockMvc.perform(get("/people"));
+		result.andExpect(status().isOk());
 	}
 	
 }

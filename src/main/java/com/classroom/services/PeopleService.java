@@ -1,5 +1,6 @@
 package com.classroom.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -23,6 +24,17 @@ public class PeopleService {
 	
 	public People savePeople(People people) {
 		return repo.save(people);
+	}
+	
+	public People alterPeople(long idpeople, People people) {
+		Optional<People> obj = repo.findById(idpeople);
+		People p = obj.orElseThrow(() -> new EntityNotFoundException("People not found"));
+		p.setName(people.getName());
+		return repo.save(p);
+	}
+	
+	public List<People> consultAll() {
+		return repo.findAll();
 	}
 
 }
